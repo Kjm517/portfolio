@@ -4,11 +4,10 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: white) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
@@ -16,7 +15,13 @@
   }
 }
 
+/* div {
+ border: 1px solid red;
+} */
+
 body {
+  padding: 0;
+  margin: 0;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,4 +29,89 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  font-family: "DM Sans";
 }
+
+/* TypeWriter */
+
+.typeWriter {
+  display: inline-block;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  font-family: "Roboto flex";
+  border-right: 3px solid;
+  font-size: clamp(3rem, 6vw + 1rem, 5rem);
+  line-height: 1.5;
+  animation: type 3s steps(15) 1s forwards infinite, blink 0.5s steps(1) infinite;
+}
+
+@keyframes type {
+  to {
+    width: 21ch;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: #000;
+  }
+}
+
+
+/* Technology Stack Carousel */
+/* @keyframes scroll {
+	0% { transform: translateX(0); }
+	100% { transform: translateX(calc(-250px * 7))}
+}
+
+.slider {
+	height: 200px;
+	overflow:hidden;
+	position: relative;
+	width: 1200px;
+	
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		width: 200px;
+		z-index: 2;
+	}
+	
+	&::after {
+		right: 0;
+		top: 0;
+		transform: rotateZ(180deg);
+	}
+
+	&::before {
+		left: 0;
+		top: 0;
+	}
+	
+	.slide-track {
+		animation: scroll 35s linear infinite;
+		display: flex;
+		width: calc(250px * 14);
+	}
+
+  .slide-track:hover {
+    animation-play-state: paused;
+    content: attr(title);
+  }
+	
+	.slide {
+		height: 100px;
+		width: 300px;
+	} */
+/* } */
+
