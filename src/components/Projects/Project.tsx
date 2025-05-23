@@ -39,7 +39,9 @@ export default function Project() {
 					}}
 					className="max-w-full p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"
 				>
-					<img className="rounded-t-lg w-full" src="/../assets/image4.png" alt="" />
+					<div className="w-full h-48 overflow-hidden rounded-t-lg">
+						<img className="w-full h-full object-cover object-center" src="/../assets/image4.png" alt="BisTalk v2 Screenshot" />
+					</div>
 					<div className="p-5 flex flex-col flex-grow">
 						<div className="mb-6">
 							<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -82,7 +84,9 @@ export default function Project() {
 					}}
 					className="max-w-full p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"
 				>
-					<img className="rounded-t-lg w-full" src="/../assets/image4.png" alt="" />
+					<div className="w-full h-48 overflow-hidden rounded-t-lg">
+						<img className="w-full h-full object-cover object-center" src="/../assets/image4.png" alt="BisTalk Capstone Screenshot" />
+					</div>
 					<div className="p-5 flex flex-col flex-grow">
 						<div className="mb-6">
 							<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -123,23 +127,24 @@ export default function Project() {
 				<motion.div
 					variants={fadeInAnimationVariant}
 					initial="initial"
-					transition={{ duration: 0.5, delay: 0.485 }}
+					transition={{ duration: 0.5, delay: 0.59 }}
 					whileInView="animate"
 					viewport={{
 						once: true,
 					}}
 					className="max-w-full p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"
 				>
-					<img className="rounded-t-lg w-full" src="/../assets/image4.png" alt="" />
+					<div className="w-full h-48 overflow-hidden rounded-t-lg">
+						<img className="w-full h-full object-cover object-center" src="/../assets/barkepedia_logo.png" alt="Barkepedia Logo" />
+					</div>
 					<div className="p-5 flex flex-col flex-grow">
 						<div className="mb-6">
 							<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-								BisTalk (Pocket Translator)
+								Barkepedia
 							</h5>
 						</div>
 						<p className="mb-3 text-xl font-normal text-gray-700 dark:text-gray-400">
-							A mother tongue based speech to text application utilized as an
-							E-learning tool intended for first graders.
+							A comprehensive dog breed encyclopedia application that provides detailed information about various dog breeds, their characteristics, and care requirements.
 						</p>
 					</div>
 
@@ -148,7 +153,7 @@ export default function Project() {
 							Android Studio
 						</span>
 						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
-							Java
+							Kotlin
 						</span>
 					</div>
 
@@ -157,45 +162,48 @@ export default function Project() {
 							type="button"
 							className="text-white w-full bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
 							target="_blank"
-							href="https://github.com/Kjm517/pocket-translator"
+							href="https://github.com/Kjm517/barkepedia"
 						>
 							Github
 						</a>
 					</div>
 				</motion.div>
-
 				<motion.div
 					variants={fadeInAnimationVariant}
 					initial="initial"
-					transition={{ duration: 0.5, delay: 0.485 }}
+					transition={{ duration: 0.5, delay: 0.59 }}
 					whileInView="animate"
 					viewport={{
 						once: true,
 					}}
 					className="max-w-full p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"
 				>
-					<img className="rounded-t-lg w-full" src="/../assets/image4.png" alt="" />
+					<div className="w-full h-48 overflow-hidden rounded-t-lg">
+						<img className="w-full h-full object-cover object-center" src="/../assets/barkepedia_logo.png" alt="Barkepedia Logo" />
+					</div>
 					<div className="p-5 flex flex-col flex-grow">
 						<div className="mb-6">
 							<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-								BisTalk: A mother tongue speech-to-text mobile application for first graders
+								Personal Portfolio
 							</h5>
 						</div>
 						<p className="mb-3 text-xl font-normal text-gray-700 dark:text-gray-400">
-							A mother tongue based speech to text application utilized as an
-							E-learning tool intended for first graders.
+							A comprehensive dog breed encyclopedia application that provides detailed information about various dog breeds, their characteristics, and care requirements.
 						</p>
 					</div>
 
 					<div className="px-5 py-2 flex flex-wrap gap-2">
 						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
-							Android Studio
+							React.js
 						</span>
 						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
-							Java
+							Next.js
 						</span>
 						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
-							Capstone
+							Typescript
+						</span>
+						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
+							Tailwind CSS
 						</span>
 					</div>
 
@@ -204,7 +212,57 @@ export default function Project() {
 							type="button"
 							className="text-white w-full bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
 							target="_blank"
-							href="https://github.com/Kjm517/pocket-translator"
+							href="https://github.com/Kjm517/portfolio"
+						>
+							Github
+						</a>
+					</div>
+				</motion.div>
+				<motion.div
+					variants={fadeInAnimationVariant}
+					initial="initial"
+					transition={{ duration: 0.5, delay: 0.59 }}
+					whileInView="animate"
+					viewport={{
+						once: true,
+					}}
+					className="max-w-full p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"
+				>
+					<div className="w-full h-48 overflow-hidden rounded-t-lg">
+						<img className="w-full h-full object-cover object-center" src="/../assets/barkepedia_logo.png" alt="Barkepedia Logo" />
+					</div>
+					<div className="p-5 flex flex-col flex-grow">
+						<div className="mb-6">
+							<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+								Silverius Portfolio
+							</h5>
+						</div>
+						<p className="mb-3 text-xl font-normal text-gray-700 dark:text-gray-400">
+							A comprehensive dog breed encyclopedia application that provides detailed information about various dog breeds, their characteristics, and care requirements.
+						</p>
+					</div>
+
+					<div className="px-5 py-2 flex flex-wrap gap-2">
+						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
+							Vue.js
+						</span>
+						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
+							Laravel
+						</span>
+						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
+							Typescript
+						</span>
+						<span className="bg-purple-400 text-white text-xs font-medium px-3 py-2 rounded-full">
+							Tailwind CSS
+						</span>
+					</div>
+
+					<div className="mt-auto px-5 py-2">
+						<a
+							type="button"
+							className="text-white w-full bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+							target="_blank"
+							href="https://github.com/Kjm517/portfolio"
 						>
 							Github
 						</a>

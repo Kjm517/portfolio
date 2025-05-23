@@ -165,6 +165,39 @@ export default function Education() {
 							</p>
 						</motion.div>
 					</div>
+					<div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+						<div className="flex items-center justify-center w-10 h-10 rounded-full border text-slate-500 group-[.is-active]:text-emerald-50 shadow-2xl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+							<span className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8  ring-white dark:ring-gray-900 dark:bg-blue-900">
+                                <span className="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-violet-800 opacity-75"></span>
+								<span className="relative inline-flex rounded-full h-3 w-3 bg-violet-500"></span>
+							</span>
+						</div>
+
+						<motion.div 
+							variants={fadeInAnimationVariant}
+							initial="initial"
+							whileInView="animate"
+							viewport={{
+								once: true,
+							}}
+							className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded border border-slate-200 shadow-2xl">
+							<div className="flex items-center justify-between space-x-2">
+								<h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+									Information Technology
+								</h3>
+							</div>
+							<p className="mb-2 text-xl font-italic tracking-tight text-gray-900 dark:text-white">
+                                University of San Carlos - Talamban Campus
+							</p>
+							<p className="block mb-2 text-base font-normal leading-none text-gray-400 dark:text-gray-700">
+								May 2019 
+							</p>
+							<p className="font-normal text-gray-700 dark:text-gray-400">
+							 - Second place Best Capston Award <br />
+							 - Datalogics Society Vice President of Information
+							</p>
+						</motion.div>
+					</div>
 				</div>
 			</div>
 		</div>
