@@ -23,9 +23,8 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/types/*": ["./src/types/*"]
     }
   },
   "include": [
@@ -34,7 +33,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/components/Navbar/Navbar.tsx"
-  ],
+, "src/scripts/seed-db.js"  ],
   "exclude": [
     "node_modules"
   ]

@@ -10,7 +10,7 @@ export default function NavBar() {
         <div className="flex justify-between items-center w-full h-full px-2 pl-5 2xl:px-16">
           <div>
             <h3 className="text-2xl md:text-base font-bold">Ren</h3>
-            <p className="text-md md:text-sm font-medium mt-[-5px] md:mt-0">Software Engineer</p>
+            <p className="text-md md:text-sm font-medium mt-[-5px] md:mt-0">Software Developer</p>
           </div>
 
           <div className="flex flex-row space-x-3.5 mt-0 p-2 mr-0 md:mr-4 md:my-0 scale-110 md:scale-1">

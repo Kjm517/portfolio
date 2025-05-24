@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed-db.js",
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
@@ -16,6 +19,8 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/node": "20.5.0",
     "antd": "^5.8.4",
+    "axios": "^1.9.0",
+    "cloudinary": "^2.6.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "eslint": "8.47.0",
@@ -33,6 +38,7 @@
     "typewriter-effect": "^2.20.1"
   },
   "devDependencies": {
+    "@types/pg": "^8.15.2",
     "@types/react": "^19.0.3",
     "@types/react-dom": "^19.0.2",
     "@types/react-scroll": "^1.8.7",
