@@ -1,29 +1,34 @@
-import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+// app/api/education/route.js (note: changed from .ts to .js)
+import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' 
-    ? { rejectUnauthorized: false } 
-    : false
-});
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function GET() {
   try {
-    const client = await pool.connect();
-    
-    const query = `
-      SELECT 
-        id, institution_name, degree, field_of_study,
-        description, location, sort_order, date
-      FROM education
-      ORDER BY CAST(sort_order AS INTEGER) ASC
-    `;
-    
-    const result = await client.query(query);
-    client.release();
-    
-    const mappedData = result.rows.map(row => ({
+    const { data, error } = await supabase
+      .from('education')
+      .select(`
+        id, 
+        institution_name, 
+        degree, 
+        field_of_study,
+        description, 
+        location, 
+        sort_order, 
+        date
+      `)
+      .order('sort_order', { ascending: true });
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const mappedData = (data || []).map(row => ({
       id: row.id,
       institution_name: row.institution_name,
       degree: row.degree,
@@ -34,13 +39,12 @@ export async function GET() {
       sort_order: row.sort_order || '0',
       date: row.date
     }));
-    
+
     return NextResponse.json(mappedData);
   } catch (error) {
     console.error('Error fetching education:', error);
-    const errMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: 'Failed to fetch education data', details: errMsg },
+      { error: 'Failed to fetch education data' },
       { status: 500 }
     );
   }

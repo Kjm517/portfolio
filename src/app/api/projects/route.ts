@@ -1,14 +1,20 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { Project, ProjectImage } from '@/types/project';
+// app/api/projects/route.js
+import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function GET() {
   try {
-    console.log('Fetching projects from database...');
+    console.log('Fetching projects with technologies from Supabase...');
 
-    const result = await db.query(`
-      SELECT 
+    // 1. Get all projects
+    const { data: projects, error: projectsError } = await supabase
+      .from('projects')
+      .select(`
         id,
         title,
         description,
@@ -18,42 +24,65 @@ export async function GET() {
         sort_order,
         created_at,
         updated_at
-      FROM projects
-      ORDER BY sort_order ASC, is_featured DESC, id ASC
-    `);
+      `)
+      .order('sort_order', { ascending: true })
+      .order('is_featured', { ascending: false })
+      .order('id', { ascending: true });
 
-    console.log('Raw DB result:', result);
+    if (projectsError) {
+      console.error('Supabase projects error:', projectsError);
+      return NextResponse.json({ error: projectsError.message }, { status: 500 });
+    }
 
-    const projects = Array.isArray((result as unknown as { rows: any[] }).rows)
-      ? (result as unknown as { rows: any[] }).rows
-      : result;
-    console.log('Parsed projects:', projects);
+    // 2. Get project-skill relationships
+    const { data: projectTechs, error: projectTechsError } = await supabase
+      .from('project_technologies')
+      .select('project_id, skill_id');
 
-    const processedProjects = (projects as any[]).map((project: any) => {
-      let techs = [];
-      try {
-        techs = typeof project.technologies === 'string'
-          ? JSON.parse(project.technologies)
-          : project.technologies || [];
-      } catch (parseErr) {
-        console.error('JSON parse error for project:', project.id, parseErr);
-        techs = [];
-      }
+    if (projectTechsError) {
+      console.error('Supabase project_technologies error:', projectTechsError);
+    }
 
-      return { ...project, technologies: techs };
+    // 3. Get all skills/technologies
+    const { data: skills, error: skillsError } = await supabase
+      .from('skills')
+      .select('id, name');
+
+    if (skillsError) {
+      console.error('Supabase skills error:', skillsError);
+    }
+
+    console.log('Raw projects:', projects);
+    console.log('Raw project_technologies:', projectTechs);
+    console.log('Raw skills:', skills);
+
+    // 4. Combine everything
+    const processedProjects = (projects || []).map((project) => {
+      // Find skill IDs for this project
+      const projectSkillIds = (projectTechs || [])
+        .filter(pt => pt.project_id === project.id)
+        .map(pt => pt.skill_id);
+
+      // Get skill names for those IDs
+      const technologies = (skills || [])
+        .filter(skill => projectSkillIds.includes(skill.id))
+        .map(skill => skill.name);
+
+      return { 
+        ...project, 
+        technologies: technologies
+      };
     });
 
-    console.log('Processed projects:', processedProjects);
+    console.log('Processed projects with technologies:', processedProjects);
 
     return NextResponse.json(processedProjects);
 
   } catch (error) {
-    console.error('Error fetching experience:', error);
-    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error('Error fetching projects:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch experience data', details: errMsg },
+      { error: 'Failed to fetch projects data' },
       { status: 500 }
     );
   }
 }
-

@@ -1,17 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+// app/api/contact/route.js
+import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
 
-const YOUR_EMAIL = 'kmanaay17@gmail.com';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export async function POST(request: NextRequest) {
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export async function POST(request) {
   try {
     const formData = await request.formData();
-    
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const subject = formData.get('subject') as string || 'Contact Form Message';
-    const message = formData.get('message') as string;
-    const fileUrl = formData.get('fileUrl') as string || null;
-    
+
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const subject = formData.get('subject') || 'Contact Form Message';
+    const message = formData.get('message');
+    const fileUrl = formData.get('fileUrl') || null;
+
     if (!name || !email || !message) {
       return NextResponse.json(
         { 
@@ -22,6 +27,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Optional: Store contact submissions in Supabase
+    const { data, error } = await supabase
+      .from('contact_submissions')
+      .insert([
+        {
+          name,
+          email,
+          subject,
+          message,
+          file_url: fileUrl,
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+    if (error) {
+      console.error('Error saving contact submission:', error);
+      // Don't fail the request if saving fails
+    }
+
     console.log('Contact form data received:', { 
       name, 
       email, 
@@ -29,7 +53,6 @@ export async function POST(request: NextRequest) {
       message: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
       fileUrl 
     });
-  
 
     return NextResponse.json({ 
       success: true, 
@@ -48,7 +71,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json(
     { 
       message: 'Contact API is working! Use POST method to submit the contact form.',

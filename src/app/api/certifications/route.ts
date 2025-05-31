@@ -1,44 +1,46 @@
-import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+// app/api/certifications/route.js
+import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' 
-    ? { rejectUnauthorized: false } 
-    : false
-});
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function GET() {
   try {
-    const client = await pool.connect();
-    
-    const query = `
-      SELECT 
-        id, name AS title, issuing_organization AS issuer, 
-        issue_date, expiration_date, credential_url AS certificate_url
-      FROM certifications
-      ORDER BY issue_date DESC
-    `;
-    
-    const result = await client.query(query);
-    client.release();
-    
-    const mappedData = result.rows.map(row => ({
+    const { data, error } = await supabase
+      .from('certifications')
+      .select(`
+        id, 
+        name, 
+        issuing_organization, 
+        issue_date, 
+        expiration_date, 
+        credential_url
+      `)
+      .order('issue_date', { ascending: false });
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const mappedData = (data || []).map(row => ({
       id: row.id,
-      title: row.title,
-      issuer: row.issuer,
+      title: row.name,
+      issuer: row.issuing_organization,
       issue_date: row.issue_date,
-      certificate_url: row.certificate_url,
+      certificate_url: row.credential_url,
       is_featured: true,
       description: row.expiration_date ? `Expires: ${row.expiration_date}` : undefined
     }));
-    
+
     return NextResponse.json(mappedData);
   } catch (error) {
-    console.error('Error fetching experience:', error);
-    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error('Error fetching certifications:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch experience data', details: errMsg },
+      { error: 'Failed to fetch certifications data' },
       { status: 500 }
     );
   }
