@@ -234,7 +234,7 @@ export default function Contact() {
           className="flex flex-col items-center"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-[20px] md:mb-[40px]">
-            Get in touch, let's talk.
+            Get in touch, let&apos;s talk.
           </h1>
           {profile && (
             <div className="text-center mb-[30px] md:mb-[60px]">
@@ -256,7 +256,7 @@ export default function Contact() {
             className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg"
           >
             <p className="font-medium">Message sent successfully!</p>
-            <p className="text-sm">Thank you for reaching out. I'll get back to you soon.</p>
+            <p className="text-sm">Thank you for reaching out. I&apos;ll get back to you soon.</p>
           </motion.div>
         )}
 

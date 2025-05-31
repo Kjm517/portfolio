@@ -38,8 +38,9 @@ export async function GET() {
     return NextResponse.json(mappedData);
   } catch (error) {
     console.error('Error fetching education:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: 'Failed to fetch education data', details: error.message },
+      { error: 'Failed to fetch education data', details: errMsg },
       { status: 500 }
     );
   }

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import Image from 'next/image';
 
 interface Project {
   id: number;
@@ -104,11 +105,13 @@ export default function Project() {
               }}
               className="max-w-full p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"
             >
-              <div className="w-full h-48 overflow-hidden rounded-t-lg">
-                <img 
-                  className="w-full h-full object-cover object-center" 
-                  src={project.image_url || "/../assets/default-project.png"} 
-                  alt={`${project.title} Screenshot`} 
+              <div className="w-full h-48 overflow-hidden rounded-t-lg relative">
+                <Image 
+                  className="object-cover object-center" 
+                  src={project.image_url || "/assets/default-project.png"}
+                  alt={`${project.title} Screenshot`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
               <div className="p-5 flex flex-col flex-grow">
@@ -122,7 +125,7 @@ export default function Project() {
                   dangerouslySetInnerHTML={{
                     __html: getDisplayDescription(project).replace(/\\n/g, "<br />"),
                   }}
-                ></p>
+                />
                 
                 {project.description.length > 300 && (
                   <button
@@ -148,10 +151,10 @@ export default function Project() {
               <div className="mt-auto px-5 py-2">
                 {project.github_url && (
                   <a
-                    type="button"
-                    className="text-white w-full bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                    className="text-white w-full bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-block"
                     target="_blank"
                     href={project.github_url}
+                    rel="noopener noreferrer"
                   >
                     {project.github_url.includes("github.com") ? "Github" : "Show Website"}
                   </a>
@@ -159,10 +162,10 @@ export default function Project() {
 
                 {project.demo_url && (
                   <a
-                    type="button"
-                    className="text-purple-700 w-full bg-white border border-purple-500 hover:bg-purple-50 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
+                    className="text-purple-700 w-full bg-white border border-purple-500 hover:bg-purple-50 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 inline-block"
                     target="_blank"
                     href={project.demo_url}
+                    rel="noopener noreferrer"
                   >
                     Live Demo
                   </a>

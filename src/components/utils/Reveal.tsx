@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import {motion, useInView, useAnimation} from 'framer-motion';
 
 interface Props {
-    children: JSX.Element;
+    children: React.ReactNode;
     width?:"fit-content" | "100%";
 }
 
@@ -15,10 +15,13 @@ export const Reveal = ({children, width = "fit-content"} : Props) => {
     const slideControls = useAnimation();
 
     useEffect(() => {
-        console.log(isInView)
-        mainControls.start("visible");
-        slideControls.start("visible");
-    },[isInView])
+        if (isInView) {
+            console.log(isInView)
+            mainControls.start("visible");
+            slideControls.start("visible");
+        }
+    }, [isInView, mainControls, slideControls])
+
     return (
         <div ref={ref} style={{ position: "relative", width, overflow: "hidden"}}>
             <motion.div 
@@ -27,9 +30,10 @@ export const Reveal = ({children, width = "fit-content"} : Props) => {
                     visible: {opacity: 1, y:0}
                 }}
                 initial="hidden"
-                animate="visible"
+                animate={mainControls}
                 transition={{duration: 0.5, delay: 0.25}}
-            >{children}
+            >
+                {children}
             </motion.div>
             <motion.div
                 variants={{
@@ -37,7 +41,7 @@ export const Reveal = ({children, width = "fit-content"} : Props) => {
                     visible: {left: "100%"}
                 }}
                 initial="hidden"
-                animate="visible"
+                animate={slideControls}
                 transition={{duration: 0.5, ease:"easeOut"}}
                 style={{
                     position: "absolute",

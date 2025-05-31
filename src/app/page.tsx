@@ -1,38 +1,43 @@
-import NavBar from '@/components/Navbar/Navbar';
-import Home from '@/components/Home/Home';
-import About from '@/components/About/About';
-import Education from '@/components/Education/Education';
-import Project from '@/components/Projects/Project';
-import Contacts from '@/components/Contacts/Contacts';
-import SideMenu from '@/components/SideMenu/SideMenu';
-import Footer from '@/components/Footer/Footer';
+"use client";
+
+import dynamic from 'next/dynamic';
+
+// Create dynamic imports with no SSR for components that use browser APIs
+const NavBar = dynamic(() => import('@/components/Navbar/Navbar'), { ssr: false });
+const Home = dynamic(() => import('@/components/Home/Home'), { ssr: false });
+const About = dynamic(() => import('@/components/About/About'), { ssr: false });
+const Education = dynamic(() => import('@/components/Education/Education'), { ssr: false });
+const Project = dynamic(() => import('@/components/Projects/Project'), { ssr: false });
+const Contacts = dynamic(() => import('@/components/Contacts/Contacts'), { ssr: false });
+const SideMenu = dynamic(() => import('@/components/SideMenu/SideMenu'), { ssr: false });
+const Footer = dynamic(() => import('@/components/Footer/Footer'), { ssr: false });
 
 export default function App() {
   return (
     <div className="w-full h-full">
       <div id="home">
-        <NavBar></NavBar>
+        <NavBar />
       </div>
       <div>
-        <SideMenu></SideMenu>
+        <SideMenu />
       </div>
       <div className='flex justify-between w-full h-full px-4 2xl:px-16'>
-        <Home></Home>
+        <Home />
       </div>
       <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="about">
-        <About></About>
+        <About />
       </div>
       <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="education">
-        <Education></Education>
+        <Education />
       </div>
       <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="project">
-        <Project></Project>
+        <Project />
       </div>
       <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="contacts">
-        <Contacts></Contacts>
+        <Contacts />
       </div>
       <div>
-        <Footer></Footer>
+        <Footer />
       </div>
     </div>
   );

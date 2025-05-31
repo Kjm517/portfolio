@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Tooltip } from 'antd';
 import { Reveal } from "@/components/utils/Reveal";
 import axios from 'axios';
+import Image from 'next/image';
 
 interface Skill {
   id: number;
@@ -55,7 +56,7 @@ export default function TypingEffect() {
       
       <Reveal>
         <div className="mb-[80px] md:mb-[130px]">
-          <a href="/assets/resume.pdf" download="Karen Jane Mana-ay - Resume" target='_blank'>
+          <a href="/resume.pdf" download="Karen Jane Mana-ay - Resume" rel="noopener noreferrer">
             <button className="bg-violet-600 text-white font-bold py-4 px-4 delay-150 hover:bg-violet-800 duration-300 rounded-lg">
               Download Resume
             </button>
@@ -85,17 +86,16 @@ export default function TypingEffect() {
                     title={`${skill.name}`}
                   >
                     <div className="relative">
-                      <img 
-                        src={skill.file_path || '/assets/default-skill.svg'} 
-                        alt={skill.name}
-                        height="80" 
-                        width="80"
-                        onError={(e) => {
-                          // Fallback to a default icon if the file path doesn't exist
-                          const target = e.target as HTMLImageElement;
-                          target.src = '/assets/default-skill.svg';
-                        }}
-                      />
+                    <Image 
+                      src={skill.file_path || '/assets/default-skill.svg'} 
+                      alt={skill.name}
+                      width={80}
+                      height={80}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/assets/default-skill.svg';
+                      }}
+                    />
                     </div>
                   </Tooltip>
                 </div>

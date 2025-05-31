@@ -18,7 +18,11 @@ export async function GET() {
     
     return NextResponse.json(result.rows[0]);
   } catch (error) {
-    console.error('Profile API error:', error);
-    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
+    console.error('Error fetching experience:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
+    return NextResponse.json(
+      { error: 'Failed to fetch experience data', details: errMsg },
+      { status: 500 }
+    );
   }
 }

@@ -17,7 +17,11 @@ export async function GET() {
     client.release();
     return NextResponse.json(result.rows);
   } catch (error) {
-    console.error('Skills API error:', error);
-    return NextResponse.json({ error: 'Failed to fetch skills' }, { status: 500 });
+    console.error('Error fetching experience:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
+    return NextResponse.json(
+      { error: 'Failed to fetch experience data', details: errMsg },
+      { status: 500 }
+    );
   }
 }

@@ -24,10 +24,12 @@ export async function GET() {
 
     console.log('Raw DB result:', result);
 
-    const projects = Array.isArray(result.rows) ? result.rows : result;
+    const projects = Array.isArray((result as unknown as { rows: any[] }).rows)
+      ? (result as unknown as { rows: any[] }).rows
+      : result;
     console.log('Parsed projects:', projects);
 
-    const processedProjects = projects.map(project => {
+    const processedProjects = (projects as any[]).map((project: any) => {
       let techs = [];
       try {
         techs = typeof project.technologies === 'string'
@@ -45,10 +47,11 @@ export async function GET() {
 
     return NextResponse.json(processedProjects);
 
-  } catch (error: any) {
-    console.error('API GET /api/projects failed:', error);
+  } catch (error) {
+    console.error('Error fetching experience:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: 'Internal Server Error', message: error.message },
+      { error: 'Failed to fetch experience data', details: errMsg },
       { status: 500 }
     );
   }

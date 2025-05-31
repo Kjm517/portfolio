@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import Image from 'next/image';
 
 interface Education {
   id: number;
@@ -220,11 +221,13 @@ export default function Education() {
                 
                 <div className="mb-2 flex items-center space-x-2">
                   {item.logoUrl && (
-                    <img 
-                      src={item.logoUrl} 
-                      alt={`${item.organization} logo`}
-                      className="w-6 h-6 rounded"
-                    />
+                    <Image 
+                    src={item.logoUrl} 
+                    alt={`${item.organization} logo`}
+                    width={24}
+                    height={24}
+                    className="rounded"
+                  />
                   )}
                   {item.companyUrl ? (
                     <a 
