@@ -26,13 +26,11 @@ interface Certification {
 }
 
 export default function About() {
-  // State for profile and certifications
   const [profile, setProfile] = useState<Profile | null>(null);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -129,15 +127,14 @@ export default function About() {
               </div>
             )}
             
-            <p>
-              {profile?.bio}
+            <p className="whitespace-pre-line">
+              {profile?.bio?.replace(/\\n/g, '\n')}
             </p>
             <br />
             <br />
             <p className="font-bold text-purple-600 dark:text-purple-400">
-              Let’s build something great together!
+              Let&apos;s build something great together!
             </p>
-
             {/* Social Links */}
             {/* {profile && (profile.github_url || profile.linkedin_url || profile.website_url) && (
               <div className="mt-6 flex gap-4">

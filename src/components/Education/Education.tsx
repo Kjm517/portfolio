@@ -46,7 +46,6 @@ interface TimelineItem {
 }
 
 export default function Education() {
-  // State for education and experience data
   const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

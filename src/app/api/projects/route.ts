@@ -5,13 +5,16 @@ import { NextResponse } from 'next/server'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
+const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string)
 
 export async function GET() {
   try {
     console.log('Fetching projects with technologies from Supabase...');
 
-    // 1. Get all projects
     const { data: projects, error: projectsError } = await supabase
       .from('projects')
       .select(`
@@ -34,7 +37,6 @@ export async function GET() {
       return NextResponse.json({ error: projectsError.message }, { status: 500 });
     }
 
-    // 2. Get project-skill relationships
     const { data: projectTechs, error: projectTechsError } = await supabase
       .from('project_technologies')
       .select('project_id, skill_id');
@@ -43,7 +45,6 @@ export async function GET() {
       console.error('Supabase project_technologies error:', projectTechsError);
     }
 
-    // 3. Get all skills/technologies
     const { data: skills, error: skillsError } = await supabase
       .from('skills')
       .select('id, name');
@@ -56,14 +57,11 @@ export async function GET() {
     console.log('Raw project_technologies:', projectTechs);
     console.log('Raw skills:', skills);
 
-    // 4. Combine everything
     const processedProjects = (projects || []).map((project) => {
-      // Find skill IDs for this project
       const projectSkillIds = (projectTechs || [])
         .filter(pt => pt.project_id === project.id)
         .map(pt => pt.skill_id);
 
-      // Get skill names for those IDs
       const technologies = (skills || [])
         .filter(skill => projectSkillIds.includes(skill.id))
         .map(skill => skill.name);

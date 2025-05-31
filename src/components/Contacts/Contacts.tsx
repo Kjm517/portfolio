@@ -101,7 +101,6 @@ export default function Contact() {
     }
   };
 
-  // Clear file selection
   const clearFileSelection = () => {
     setFormData(prev => ({
       ...prev,
@@ -164,7 +163,6 @@ export default function Contact() {
         subject: formData.subject || 'Contact Form Message',
         message: formData.message,
         reply_to: formData.email,
-        // Add file information to the email
         file_info: fileUrl ? `\n\nAttachment: ${window.location.origin}${fileUrl}` : ''
       };
 

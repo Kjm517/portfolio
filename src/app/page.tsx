@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 
-// Create dynamic imports with no SSR for components that use browser APIs
 const NavBar = dynamic(() => import('@/components/Navbar/Navbar'), { ssr: false });
 const Home = dynamic(() => import('@/components/Home/Home'), { ssr: false });
 const About = dynamic(() => import('@/components/About/About'), { ssr: false });

@@ -5,9 +5,13 @@ import { NextResponse } from 'next/server'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
 
-export async function POST(request) {
+const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string)
+
+export async function POST(request: Request) {
   try {
     const formData = await request.formData();
 
@@ -27,7 +31,7 @@ export async function POST(request) {
       );
     }
 
-    // Optional: Store contact submissions in Supabase
+    
     const { data, error } = await supabase
       .from('contact_submissions')
       .insert([
@@ -43,14 +47,14 @@ export async function POST(request) {
 
     if (error) {
       console.error('Error saving contact submission:', error);
-      // Don't fail the request if saving fails
+
     }
 
     console.log('Contact form data received:', { 
       name, 
       email, 
       subject,
-      message: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
+      message: typeof message === 'string' ? message.substring(0, 100) + (message.length > 100 ? '...' : '') : '',
       fileUrl 
     });
 
