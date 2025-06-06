@@ -45,7 +45,7 @@ interface TimelineItem {
   logoUrl?: string;
 }
 
-export default function Education() {
+export default function Education() { 
   const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -252,7 +252,7 @@ export default function Education() {
                 </p>
                 
                 <div className="font-normal text-gray-700 dark:text-gray-400 mb-3">
-                  {item.description.split('\n').map((line, lineIndex) => (
+                  {item.description.replace(/\\n/g, '\n').split('\n').map((line, lineIndex) => (
                     <p key={lineIndex} className={lineIndex > 0 ? 'mt-2' : ''}>
                       {line}
                     </p>
