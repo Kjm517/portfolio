@@ -1,10 +1,8 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import TextArea from "antd/es/input/TextArea";
 import Lottie from "lottie-react";
 import ContactAnim from "../../../public/anim/contact-us.json";
-import emailjs from '@emailjs/browser';
 
 interface Profile {
   id: number;
@@ -16,30 +14,10 @@ interface Profile {
   mobile_number: string;
 }
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  file: File | null;
-}
-
 export default function Contact() {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    file: null
-  });
   const [loading, setLoading] = useState<boolean>(true);
-  const [submitting, setSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [fileName, setFileName] = useState<string>('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
   const fadeInAnimationVariant = {
     initial: {
@@ -52,9 +30,14 @@ export default function Contact() {
     },
   };
 
-  useEffect(() => {
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
-  }, []);
+  const staggerContainer = {
+    initial: {},
+    animate: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -66,7 +49,6 @@ export default function Contact() {
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch profile data:', err);
-        setError('Failed to load contact information.');
         setLoading(false);
       }
     };
@@ -74,142 +56,58 @@ export default function Contact() {
     fetchProfile();
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      // Check file size (limit to 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setError('File size exceeds 10MB limit.');
-        e.target.value = '';
-        return;
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        file: file
-      }));
-      setFileName(file.name);
-      setError(null);
-    }
-  };
-
-  const clearFileSelection = () => {
-    setFormData(prev => ({
-      ...prev,
-      file: null
-    }));
-    setFileName('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const uploadFile = async (file: File): Promise<string | null> => {
-    const formData = new FormData();
-    formData.append('file', file);
-
+  const copyToClipboard = async (text: string, type: string) => {
     try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'File upload failed');
-      }
-
-      const data = await response.json();
-      return data.fileUrl;
+      await navigator.clipboard.writeText(text);
+      setCopiedItem(type);
+      setTimeout(() => setCopiedItem(null), 2000);
     } catch (err) {
-      console.error('File upload error:', err);
-      return null;
+      console.error('Failed to copy to clipboard:', err);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.message) {
-      setError('Please fill in all required fields.');
-      return;
+  const contactMethods = [
+    {
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+        </svg>
+      ),
+      label: "Email",
+      value: profile?.email || "",
+      action: () => window.open(`mailto:${profile?.email}`, '_blank'),
+      copyValue: profile?.email || "",
+      description: "Send me an email"
+    },
+    {
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+        </svg>
+      ),
+      label: "Phone",
+      value: profile?.mobile_number || "",
+      action: () => window.open(`tel:${profile?.mobile_number}`, '_blank'),
+      copyValue: profile?.mobile_number || "",
+      description: "Give me a call"
+    },
+    {
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+        </svg>
+      ),
+      label: "Location",
+      value: profile?.location || "",
+      action: () => {
+        const query = encodeURIComponent(profile?.location || "");
+        window.open(`https://www.google.com/maps/search/${query}`, '_blank');
+      },
+      copyValue: profile?.location || "",
+      description: "View on map"
     }
-
-    setSubmitting(true);
-    setError(null);
-
-    try {
-      let fileUrl = null;
-      
-      if (formData.file) {
-        fileUrl = await uploadFile(formData.file);
-        if (!fileUrl) {
-          throw new Error('File upload failed. Please try again.');
-        }
-      }
-
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        to_name: profile?.name || "Karen Jane Mana-ay",
-        subject: formData.subject || 'Contact Form Message',
-        message: formData.message,
-        reply_to: formData.email,
-        file_info: fileUrl ? `\n\nAttachment: ${window.location.origin}${fileUrl}` : ''
-      };
-
-      if (fileUrl) {
-        templateParams.message = `${formData.message}\n\n📎 Attachment: ${fileName}\nDownload: ${fileUrl}`;
-      }
-
-      const response = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        templateParams
-      );
-
-      console.log('Email sent successfully:', response);
-
-      if (process.env.NEXT_PUBLIC_EMAILJS_AUTO_REPLY_TEMPLATE_ID) {
-        try {
-          await emailjs.send(
-            process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-            process.env.NEXT_PUBLIC_EMAILJS_AUTO_REPLY_TEMPLATE_ID,
-            templateParams
-          );
-          console.log('Auto-reply sent successfully');
-        } catch (autoReplyError) {
-          console.error('Auto-reply failed:', autoReplyError);
-        }
-      }
-      
-      setSuccess(true);
-      setFormData({ name: '', email: '', subject: '', message: '', file: null });
-      setFileName('');
-      
-      setTimeout(() => setSuccess(false), 5000);
-    } catch (err: any) {
-      console.error('Failed to send message:', err);
-      
-      if (err.text) {
-        setError(`Failed to send message: ${err.text}`);
-      } else if (err.message) {
-        setError(`Failed to send message: ${err.message}`);
-      } else {
-        setError('Failed to send message. Please try again or contact directly via email.');
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  ];
 
   if (loading) {
     return (
@@ -220,8 +118,9 @@ export default function Contact() {
   }
 
   return (
-    <div className="h-full w-full flex flex-col md:flex-row justify-center items-center mt-[-70px] md:mt-[-50px]">
-      <div className="w-full md:w-1/2">
+    <div className="h-full w-full flex flex-col lg:flex-row justify-center items-center mt-[-70px] md:mt-[-50px] px-4">
+      {/* Content Section */}
+      <div className="w-full lg:w-1/2 max-w-2xl">
         <motion.div
           variants={fadeInAnimationVariant}
           initial="initial"
@@ -229,236 +128,114 @@ export default function Contact() {
           viewport={{
             once: true,
           }}
-          className="flex flex-col items-center"
+          className="text-center lg:text-left mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-[20px] md:mb-[40px]">
-            Get in touch, let&apos;s talk.
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-purple-600">
+            Let&apos;s Connect
           </h1>
+          
           {profile && (
-            <div className="text-center mb-[30px] md:mb-[60px]">
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Reach out to <span className="font-semibold text-purple-600">{profile.name}</span>
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
-                {profile.location}
+            <div className="mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white mb-2">
+                {profile.name}
+              </h2>
+              <p className="text-lg text-purple-600 dark:text-purple-400 font-medium mb-4">
+                {profile.title}
               </p>
             </div>
           )}
         </motion.div>
 
-        {/* Success Message */}
-        {success && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg"
-          >
-            <p className="font-medium">Message sent successfully!</p>
-            <p className="text-sm">Thank you for reaching out. I&apos;ll get back to you soon.</p>
-          </motion.div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg"
-          >
-            <p className="font-medium">Error:</p>
-            <p className="text-sm">{error}</p>
-          </motion.div>
-        )}
-
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <motion.div
-            variants={fadeInAnimationVariant}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            className="flex flex-col md:flex-row mb-4 gap-4 md:gap-8"
-          >
-            <div className="relative w-full md:w-[427px]">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-              />
-              <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">
-                Name
-              </label>
-            </div>
-
-            <div className="relative w-full md:w-[427px]">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-              />
-              <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">
-                Email address
-              </label>
-            </div>
-          </motion.div>
-
-          {/* Subject field */}
-          <motion.div
-            variants={fadeInAnimationVariant}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            className="relative w-full mb-4"
-          >
-            <input
-              type="text"
-              name="subject"
-              value={formData.subject}
-              onChange={handleInputChange}
-              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-            />
-            <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">
-              Subject (optional)
-            </label>
-          </motion.div>
-
-          <motion.div
-            variants={fadeInAnimationVariant}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            className="relative w-full mb-4"
-          >
-            <TextArea
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              rows={6}
-              className="block px-2.5 pb-2.5 pt-4 w-full h-[180px] text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">
-              Message
-            </label>
-          </motion.div>
-
-          {/* File attachment */}
-          <motion.div
-            variants={fadeInAnimationVariant}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            className="mb-4"
-          >
-            <div className="flex items-center justify-between p-2 border border-gray-300 rounded-lg dark:border-gray-600">
-              <div className="flex items-center">
-                <label htmlFor="file-upload" className="flex items-center cursor-pointer">
-                  <span className="inline-flex items-center justify-center w-8 h-8 mr-2 bg-purple-100 text-purple-600 rounded-full dark:bg-purple-900 dark:text-purple-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                    </svg>
-                  </span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {fileName ? fileName : 'Attach a file (optional)'}
-                  </span>
-                </label>
-                <input
-                  id="file-upload"
-                  name="file"
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-                />
-              </div>
-              {fileName && (
-                <button
-                  type="button"
-                  onClick={clearFileSelection}
-                  className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              )}
-            </div>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Max file size: 10MB. Supported formats: PDF, DOC, DOCX, TXT, JPG, JPEG, PNG
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={fadeInAnimationVariant}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            className="w-full"
-          >
-            <button
-              type="submit"
-              disabled={submitting}
-              className={`text-white w-full bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
-                submitting ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+        {/* Contact Methods */}
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{
+            once: true,
+          }}
+          className="space-y-4"
+        >
+          {contactMethods.map((method, index) => (
+            <motion.div
+              key={method.label}
+              variants={fadeInAnimationVariant}
+              className="group relative"
             >
-              {submitting ? (
-                <span className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                  Sending...
-                </span>
-              ) : (
-                'Send Message'
-              )}
-            </button>
-          </motion.div>
-        </form>
+              <div className="flex items-center justify-between p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-500">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-purple-600 rounded-lg text-white group-hover:scale-110 transition-transform duration-300">
+                    {method.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                      {method.label}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {method.value}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {method.description}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex space-x-2">
+                  {/* Action Button */}
+                  <button
+                    onClick={method.action}
+                    className="p-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-colors duration-200"
+                    title={`Open ${method.label.toLowerCase()}`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                  </button>
+                  
+                  {/* Copy Button */}
+                  <button
+                    onClick={() => copyToClipboard(method.copyValue, method.label)}
+                    className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                    title="Copy to clipboard"
+                  >
+                    {copiedItem === method.label ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-green-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-        {/* Contact Information */}
-        {profile && (
-          <motion.div
-            variants={fadeInAnimationVariant}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
-          >
-            <h3 className="text-lg font-semibold mb-2">Direct Contact</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Email: <a href={`mailto:${profile.email}`} className="text-purple-600 hover:text-purple-800">{profile.email}</a>
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              Location: {profile.location}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              Contact #: {profile.mobile_number}
-            </p>
-          </motion.div>
-        )}
+        {/* Additional Info */}
+        <motion.div
+          variants={fadeInAnimationVariant}
+          initial="initial"
+          whileInView="animate"
+          viewport={{
+            once: true,
+          }}
+          className="mt-8 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-700"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            💬 Let&apos;s Start a Conversation
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            I&apos;m always excited to connect with new people and explore opportunities for collaboration. 
+            Whether you have a project in mind, want to discuss ideas, or just want to say hello, 
+            I&apos;d love to hear from you!
+          </p>
+        </motion.div>
       </div>
 
+      {/* Animation Section */}
       <motion.div
         variants={fadeInAnimationVariant}
         initial="initial"
@@ -466,9 +243,12 @@ export default function Contact() {
         viewport={{
           once: true,
         }}
-        className="h-2/5 w-full md:w-2/5"
+        className="w-full lg:w-3/5 max-w-2xl mt-8 lg:mt-0"
       >
-        <Lottie animationData={ContactAnim} />
+        <Lottie 
+          animationData={ContactAnim} 
+          className="w-full h-auto scale-110"
+        />
       </motion.div>
     </div>
   );
