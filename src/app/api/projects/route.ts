@@ -23,6 +23,7 @@ export async function GET() {
         description,
         image_url,
         github_url,
+        website_url,
         is_featured,
         sort_order,
         created_at,
