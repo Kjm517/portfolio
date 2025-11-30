@@ -39,10 +39,10 @@ export default function TypingEffect() {
   const featuredSkills = skills.filter((skill) => skill.is_featured);
 
   return (
-    <div className="flex flex-col items-center w-full h-full mt-[75px] md:mt-[170px] px-4">
+    <div className="flex flex-col items-center w-full h-full mt-[75px] md:mt-[170px] px-4 bg-white dark:bg-gray-950 transition-colors duration-300">
       {/* Name */}
       <Reveal>
-        <h1 className="text-4xl md:text-8xl font-bold text-center">
+        <h1 className="text-4xl md:text-8xl font-bold text-center text-gray-900 dark:text-white">
           Karen Jane Mana-ay
         </h1>
       </Reveal>
@@ -116,7 +116,7 @@ export default function TypingEffect() {
                       w-16 h-16 md:w-20 md:h-20
                       rounded-full
                       flex items-center justify-center
-                      bg-white/80 dark:bg-gray-900/80
+                      bg-white/80 dark:bg-gray-950/80
                       shadow-[0_10px_30px_rgba(15,23,42,0.15)]
                       overflow-hidden
                       transition-shadow duration-200
@@ -128,14 +128,18 @@ export default function TypingEffect() {
                       alt={skill.name}
                       width={52}
                       height={52}
-                      className="
+                      className={`
                         object-contain
                         grayscale opacity-70
                         group-hover:grayscale-0
                         group-hover:opacity-100
                         group-hover:scale-110
                         transition-all duration-200
-                      "
+                        ${skill.name.toLowerCase() === 'framer motion' || skill.name.toLowerCase() === 'next.js' 
+                          ? 'dark:group-hover:brightness-0 dark:group-hover:invert dark:group-hover:opacity-100' 
+                          : ''
+                        }
+                      `}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = "/assets/default-skill.svg";

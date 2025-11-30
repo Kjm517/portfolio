@@ -41,7 +41,7 @@ export default function Side() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             {/* Backdrop blur */}
-            <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/20 backdrop-blur-md rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-2xl"></div>
+            <div className="absolute inset-0 bg-white/20 dark:bg-gray-950/20 backdrop-blur-md rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-2xl"></div>
             
             {/* Menu Items */}
             <div className="relative flex flex-col gap-3 p-4">
@@ -58,7 +58,7 @@ export default function Side() {
                     smooth={true}
                     offset={-70}
                     duration={500}
-                    className="group relative flex items-center justify-center w-14 h-14 rounded-xl bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-white/50 dark:border-gray-600/50 hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 hover:border-transparent transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl hover:scale-105"
+                    className="group relative flex items-center justify-center w-14 h-14 rounded-xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm border border-white/50 dark:border-gray-600/50 hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 hover:border-transparent transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl hover:scale-105"
                     activeStyle={{
                       background: 'linear-gradient(135deg, #d9b2e9, #c084fc)',
                       borderColor: 'transparent',

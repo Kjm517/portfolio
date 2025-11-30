@@ -114,14 +114,6 @@ export default function Education() {
           console.error('Failed to fetch experience data:', expError);
         }
 
-        if (combinedItems.length === 0) {
-          console.error('No data available from database APIs');
-          setError('No education or experience data found. Please check your database.');
-          setLoading(false);
-          return;
-        }
-
-
         combinedItems.sort((a, b) => {
           if (a.type === 'education' && b.type === 'experience') return 1;
           if (a.type === 'experience' && b.type === 'education') return -1;
@@ -164,17 +156,9 @@ export default function Education() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="h-full w-full flex justify-center items-center">
-        <div className="text-red-500 text-center text-xl">{error}</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col items-center w-full h-full mt-0 md:mt-[100px]">
-      <div className="mb-11 flex flex-col items-center">
+    <div className="flex flex-col items-center w-full h-full mt-0 md:mt-[100px] bg-white dark:bg-gray-950 transition-colors duration-300">
+      <div className="mb-11 flex flex-col items-center w-full">
         <motion.div
           variants={fadeInAnimationVariant}
           initial="initial"
@@ -182,18 +166,40 @@ export default function Education() {
           viewport={{
             once: true,
           }}>
-          <h1 className="text-5xl font-bold mb-[70px] mx-auto">
+          <h1 className="text-5xl font-bold mb-[70px] mx-auto text-gray-900 dark:text-white">
             EXPERIENCE & EDUCATIONAL BACKGROUND
           </h1>
         </motion.div>
         
-        <div className="space-y-20 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent z-[-1]">
-          {timelineItems.map((item, index) => (
-            <div key={item.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+        {error && (
+          <div className="text-red-500 text-center text-xl mb-8">{error}</div>
+        )}
+        
+        {timelineItems.length === 0 && !loading ? (
+          <motion.div
+            variants={fadeInAnimationVariant}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            className="text-center py-12"
+          >
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-900 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No education or experience data available</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm">Please add data to your database to see your timeline here</p>
+          </motion.div>
+        ) : (
+          <div className="space-y-20 relative w-full">
+            <div className="absolute left-5 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-slate-300 dark:via-slate-600 to-transparent z-0"></div>
+            {timelineItems.map((item, index) => (
+            <div key={item.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active z-10">
               <div className="flex items-center justify-center w-10 h-10 rounded-full border shadow-2xl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                <span className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
-                  <span className={`animate-ping absolute inline-flex h-6 w-6 rounded-full bg-violet-800 ${item.isCurrent ? 'opacity-75' : 'opacity-20'}`}></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-500"></span>
+                <span className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-950 dark:bg-blue-900">
+                  <span className={`animate-ping absolute inline-flex h-6 w-6 rounded-full bg-violet-800 dark:bg-white ${item.isCurrent ? 'opacity-75 dark:opacity-60' : 'opacity-20 dark:opacity-30'}`}></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-500 dark:bg-white"></span>
                 </span>
               </div>
 
@@ -205,7 +211,7 @@ export default function Education() {
                 viewport={{
                   once: true,
                 }}
-                className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded border border-slate-200 shadow-2xl dark:bg-gray-800 dark:border-gray-700">
+                className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded border border-slate-200 shadow-2xl dark:bg-gray-900 dark:border-gray-800">
                 
                 <div className="flex items-center justify-between space-x-2">
                   <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -283,7 +289,8 @@ export default function Education() {
               </motion.div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

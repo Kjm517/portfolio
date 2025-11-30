@@ -118,7 +118,7 @@ export default function Contact() {
   }
 
   return (
-    <div className="h-full w-full flex flex-col lg:flex-row justify-center items-center mt-[-70px] md:mt-[-50px] px-4">
+    <div className="h-full w-full flex flex-col lg:flex-row justify-center items-center mt-[-70px] md:mt-[-50px] px-4 bg-white dark:bg-gray-950 transition-colors duration-300">
       {/* Content Section */}
       <div className="w-full lg:w-1/2 max-w-2xl">
         <motion.div
@@ -130,7 +130,7 @@ export default function Contact() {
           }}
           className="text-center lg:text-left mb-12"
         >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-purple-600">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-purple-600 dark:text-purple-400">
             Let&apos;s Connect
           </h1>
           
@@ -162,7 +162,7 @@ export default function Contact() {
               variants={fadeInAnimationVariant}
               className="group relative"
             >
-              <div className="flex items-center justify-between p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-500">
+              <div className="flex items-center justify-between p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-500">
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center justify-center w-12 h-12 bg-purple-600 rounded-lg text-white group-hover:scale-110 transition-transform duration-300">
                     {method.icon}

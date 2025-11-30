@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Footer() {
 	return (
-		<footer className="w-full bg-white rounded-lg shadow dark:bg-gray-900">
+		<footer className="w-full bg-white rounded-lg shadow dark:bg-gray-950">
 			<div className="w-full max-w-screen-xxl mx-auto p-4 md:py-8">
 				<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between">
 					<ul className="flex flex-wrap items-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:ml-auto">

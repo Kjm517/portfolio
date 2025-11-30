@@ -110,7 +110,7 @@ export default function About() {
             once: true,
           }}
           className="mb-11">
-          <h1 className="text-5xl font-bold">ABOUT</h1>
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white">ABOUT</h1>
         </motion.div>
 
         <motion.div
@@ -120,7 +120,7 @@ export default function About() {
           viewport={{
             once: true,
           }}
-          className="w-full rounded overflow-hidden shadow-2xl flex h-auto font-medium text-2xl leading-10 px-7 py-7 bg-white dark:bg-gray-800">
+          className="w-full rounded overflow-hidden shadow-2xl flex h-auto font-medium text-2xl leading-10 px-7 py-7 bg-white dark:bg-gray-900">
           <div className="text-gray-700 dark:text-gray-300">
             {profile && (
               <div className="mb-6">
@@ -183,7 +183,7 @@ export default function About() {
             once: true,
           }}
           className="mb-11">
-          <h1 className="text-5xl font-bold">CERTIFICATIONS & AWARDS</h1>
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white">CERTIFICATIONS & AWARDS</h1>
         </motion.div>
 
         <div className="w-full space-y-6">
@@ -198,7 +198,7 @@ export default function About() {
                 viewport={{
                   once: true,
                 }}
-                className="w-full rounded overflow-hidden shadow-2xl flex items-center justify-between h-auto font-medium text-2xl leading-10 px-7 py-7 bg-white dark:bg-gray-800">
+                className="w-full rounded overflow-hidden shadow-2xl flex items-center justify-between h-auto font-medium text-2xl leading-10 px-7 py-7 bg-white dark:bg-gray-900">
                 <div className="text-gray-700 dark:text-gray-300 flex-1">
                   <p className="text-xl font-semibold">{certification.title}</p>
                   {certification.issuer && (
@@ -225,7 +225,7 @@ export default function About() {
               </motion.div>
             ))
           ) : (
-            <div className="w-full rounded overflow-hidden shadow-2xl flex items-center justify-center h-auto font-medium text-xl leading-10 px-7 py-7 bg-white dark:bg-gray-800">
+            <div className="w-full rounded overflow-hidden shadow-2xl flex items-center justify-center h-auto font-medium text-xl leading-10 px-7 py-7 bg-white dark:bg-gray-900">
               <p className="text-gray-500 dark:text-gray-400">
                 No certifications data available. Please check your database.
               </p>

@@ -13,29 +13,29 @@ const Footer = dynamic(() => import('@/components/Footer/Footer'), { ssr: false 
 
 export default function App() {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-white dark:bg-gray-950 min-h-screen transition-colors duration-300">
       <div id="home">
         <NavBar />
       </div>
       <div>
         <SideMenu />
       </div>
-      <div className='flex justify-between w-full h-full px-4 2xl:px-16'>
+      <div className='flex justify-between w-full h-full px-4 2xl:px-16 bg-white dark:bg-gray-950 transition-colors duration-300'>
         <Home />
       </div>
-      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="about">
+      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px] bg-white dark:bg-gray-950 transition-colors duration-300' id="about">
         <About />
       </div>
-      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="education">
+      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px] bg-white dark:bg-gray-950 transition-colors duration-300' id="education">
         <Education />
       </div>
-      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="project">
+      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px] bg-white dark:bg-gray-950 transition-colors duration-300' id="project">
         <Project />
       </div>
-      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px]' id="contacts">
+      <div className='flex justify-between w-full h-full px-4 2xl:px-16 mt-[200px] bg-white dark:bg-gray-950 transition-colors duration-300' id="contacts">
         <Contacts />
       </div>
-      <div>
+      <div className="bg-white dark:bg-gray-950 transition-colors duration-300">
         <Footer />
       </div>
     </div>

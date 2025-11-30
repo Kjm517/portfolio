@@ -30,6 +30,12 @@ body {
     )
     rgb(var(--background-start-rgb));
   font-family: "DM Sans";
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background: #030712;
+  color: #f9fafb;
 }
 
 /* TypeWriter */
@@ -63,6 +69,21 @@ body {
 
   50% {
     border-color: #000;
+  }
+}
+
+.dark .typeWriter {
+  animation: type 3s steps(15) 1s forwards infinite, blink-dark 0.5s steps(1) infinite;
+}
+
+@keyframes blink-dark {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: #fff;
   }
 }
 
